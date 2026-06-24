@@ -1,7 +1,9 @@
 name: 每日签到
 
 on:
-  push:
+  # 每小时第 10 分钟执行（UTC 时间）
+  schedule:
+    - cron: "10 * * * *"
   workflow_dispatch:
 
 jobs:
