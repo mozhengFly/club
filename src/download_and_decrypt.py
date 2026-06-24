@@ -59,10 +59,18 @@ def decrypt_login_file(password: str, enc_file: Path, output_file: Path) -> None
     print("解密完成")
 
 
+def cleanup_old_login() -> None:
+    if OUTPUT_FILE.exists():
+        OUTPUT_FILE.unlink()
+        print(f"已删除旧的 {OUTPUT_FILE}")
+
+
 def main() -> None:
     if not AES_PASSWORD:
         print("错误: 请设置环境变量 AES_PASSWORD")
         sys.exit(1)
+
+    cleanup_old_login()
 
     try:
         download_encrypted_file(LOGIN_ENC_URL, ENC_FILE)
