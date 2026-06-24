@@ -6,7 +6,8 @@ on:
 
 jobs:
   sign-in:
-    runs-on: ubuntu-latest
+    # Ubuntu 24.04 不再提供 Python 3.8，需使用 22.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: 检出代码
