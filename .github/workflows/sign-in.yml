@@ -8,6 +8,8 @@ jobs:
   sign-in:
     # Ubuntu 24.04 不再提供 Python 3.8，需使用 22.04
     runs-on: ubuntu-22.04
+    env:
+      ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
 
     steps:
       - name: 检出代码
