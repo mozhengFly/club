@@ -15,6 +15,7 @@ jobs:
       ACCOUNT_LIST: ${{ secrets.ACCOUNT_LIST }}
       ACCOUNT_SALT: ${{ secrets.ACCOUNT_SALT }}
       ACCOUNT_SEED_PASSWORD: ${{ secrets.ACCOUNT_SEED_PASSWORD }}
+      MAIL_CONFIG: ${{ secrets.MAIL_CONFIG }}
 
     steps:
       - name: 检出代码
