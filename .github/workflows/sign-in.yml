@@ -1,0 +1,53 @@
+name: 每日签到
+
+on:
+  # 每天凌晨 2:26 执行（北京时间 UTC+8，对应 UTC 18:26）
+  schedule:
+    - cron: "26 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  sign-in:
+    # Ubuntu 24.04 不再提供 Python 3.8，需使用 22.04
+    runs-on: ubuntu-22.04
+    env:
+      ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
+      ACCOUNT_LIST: ${{ secrets.ACCOUNT_LIST }}
+      ACCOUNT_SALT: ${{ secrets.ACCOUNT_SALT }}
+      ACCOUNT_SEED_PASSWORD: ${{ secrets.ACCOUNT_SEED_PASSWORD }}
+      MAIL_CONFIG: ${{ secrets.MAIL_CONFIG }}
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 3.8
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.8"
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 打印执行服务器 IP
+        run: |
+          IP=$(curl -s --max-time 10 https://api.ipify.org || curl -s --max-time 10 https://ifconfig.me/ip)
+          echo "当前执行任务服务器 IP: ${IP:-获取失败}"
+
+      - name: 清理旧的 login.py
+        run: rm -f src/login.py
+
+      - name: 下载并解密 login
+        env:
+          LOGIN_ENC_URL: ${{ secrets.LOGIN_ENC_URL }}
+          AES_PASSWORD: ${{ secrets.AES_PASSWORD }}
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+          ALL_PROXY: ""
+        run: python src/download_and_decrypt.py
+
+      - name: 执行签到
+        run: python src/login.py
+
+      - name: 打印签到结果
+        run: python src/print_sign_result.py
