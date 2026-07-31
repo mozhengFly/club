@@ -7,9 +7,19 @@ from typing import Any, Dict, List, Optional, Sequence
 
 SIGN_RESULT_FILE = "sign_result.json"
 
-TABLE_HEADERS = ("账号", "Token", "本次获得金币", "总金币")
+TABLE_HEADERS = ("Account", "Token", "Coin Gain", "Total Coins")
 TABLE_KEYS = ("account", "token", "coin_gain", "total_coin")
 TOKEN_MAX_WIDTH = 36
+
+
+def total_coin_value(item: Dict[str, Any]) -> int:
+    value = item.get("total_coin", 0)
+    if isinstance(value, int):
+        return value
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def display_width(text: str) -> int:
@@ -109,7 +119,8 @@ def print_sign_result_table(results: List[Dict[str, Any]]) -> None:
         print("签到结果为空")
         return
 
-    rows = build_table_rows(results)
+    sorted_results = sorted(results, key=total_coin_value, reverse=True)
+    rows = build_table_rows(sorted_results)
     print(render_table(TABLE_HEADERS, rows))
 
     total_coin_gain = 0
