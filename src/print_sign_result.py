@@ -7,8 +7,8 @@ from typing import Any, Dict, List, Optional, Sequence
 
 SIGN_RESULT_FILE = "sign_result.json"
 
-TABLE_HEADERS = ("Account", "Token", "Coin Gain", "Total Coins")
-TABLE_KEYS = ("account", "token", "coin_gain", "total_coin")
+TABLE_HEADERS = ("Account", "Token", "Coin Gain", "Total Coins", "Bind Changes")
+TABLE_KEYS = ("account", "token", "coin_gain", "total_coin", "change_bind_num")
 TOKEN_MAX_WIDTH = 36
 
 
@@ -73,6 +73,7 @@ def build_table_rows(results: List[Dict[str, Any]]) -> List[List[str]]:
             format_cell(item.get("token", ""), TOKEN_MAX_WIDTH),
             format_cell(item.get("coin_gain", 0)),
             format_cell(item.get("total_coin", 0)),
+            format_cell(item.get("change_bind_num", "")),
         ])
     return rows
 
@@ -124,8 +125,10 @@ def print_sign_result_table(results: List[Dict[str, Any]]) -> None:
     print(render_table(TABLE_HEADERS, rows))
 
     total_coin_gain = 0
+    total_coin_all = 0
     for item in results:
         coin_gain = item.get("coin_gain", 0)
+        total_coin = item.get("total_coin", 0)
         if isinstance(coin_gain, int):
             total_coin_gain += coin_gain
         else:
@@ -133,9 +136,16 @@ def print_sign_result_table(results: List[Dict[str, Any]]) -> None:
                 total_coin_gain += int(coin_gain)
             except (TypeError, ValueError):
                 pass
+        if isinstance(total_coin, int):
+            total_coin_all += total_coin
+        else:
+            try:
+                total_coin_all += int(total_coin)
+            except (TypeError, ValueError):
+                pass
 
     print("")
-    print("共 {} 个账号，本次合计获得金币: {}".format(len(results), total_coin_gain))
+    print("共 {} 个账号，本次合计获得金币: {}，所有账号总金币: {}".format(len(results), total_coin_gain, total_coin_all))
 
 
 def resolve_file_path(custom_path: Optional[str]) -> str:
