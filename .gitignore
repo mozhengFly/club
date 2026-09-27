@@ -203,8 +203,6 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
-login.*
-
 # Ruff stuff:
 .ruff_cache/
 
@@ -218,5 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-*.iml
-.idea
+
+login.*
+sign_result.json
+check-in.bundle.js
+full-flow.bundle.js
+trigger_travis_build.bat
