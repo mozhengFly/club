@@ -1,0 +1,16 @@
+# GitHub 自动生成的 "Source code (zip)" / "Source code (tar.gz)" 的内容控制
+#
+# 背景：Release 页面 Assets 下这两个源码包，由 GitHub 按 tag 用 git archive 强制生成，
+#       REST API 和网页都无法删除或隐藏（GitHub 官方长期不打算支持）。
+#       唯一能控制的是「包内内容」——下面用 export-ignore 把文件排除出包。
+# 效果：源码包内只剩 LICENSE，bundle、CI 配置等都不再打包。
+#
+# 注意：export-ignore 只影响 git archive / GitHub 生成的源码包，
+#       不影响仓库本身，也不影响 GitHub Actions 读取 .github/workflows。
+
+.gitattributes           export-ignore
+.github/                 export-ignore
+.gitignore               export-ignore
+.workbuddy/              export-ignore
+check-in.bundle.zip      export-ignore
+crypto.bundle.js         export-ignore
